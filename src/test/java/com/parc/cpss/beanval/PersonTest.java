@@ -12,11 +12,13 @@ import javax.validation.Payload;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.validation.executable.ExecutableValidator;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -119,6 +121,31 @@ class PersonTest {
 
 		// violates Past
 		assertEquals(1, violations.size());
+	}
+	
+	@Test
+	void negative_grow_result() throws ParseException {
+		int height = 127;
+		Person person = new Person(dateFormat.parse("1901-01-01"), "Male", height);
+		
+		ExecutableValidator executableValidator = Validation
+		        .buildDefaultValidatorFactory()
+		        .getValidator()
+		        .forExecutables();
+		
+		try {
+			int bad_height = -5;
+		    Method grow = person.getClass().getMethod("grow", int.class);
+		    
+		    // TODO: This calls System.out.println for each violation.  We need to
+		    // pass it through our printViolations() to get the severity.
+		    executableValidator
+		            .validateReturnValue(person, grow, bad_height).stream()
+		            .map(ConstraintViolation::getMessage)
+		            .forEach(System.out::println);
+		} catch (NoSuchMethodException e) {
+		    e.printStackTrace();
+		}
 	}
 
 }
