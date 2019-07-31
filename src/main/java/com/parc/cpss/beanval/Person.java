@@ -2,17 +2,20 @@ package com.parc.cpss.beanval;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Positive;
+
+import com.parc.cpss.beanval.ViolationSeverity;
 
 import net.andreinc.jbvext.annotations.date.*;
 
 public class Person {
 	
 	@NotNull(message = "birthday must not be null")
-	@After(value = "1900-01-01", format = "yyyy-MM-dd", message="Birthday must be after 1900-01-01")
+	@After(value = "1900-01-01", format = "yyyy-MM-dd", 
+				message="Birthday must be after {value}", 
+				payload=ViolationSeverity.Info.class)
 	@Past(message = "birthday must be in the past")
 	private Date m_birthday;
 	
