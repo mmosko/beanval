@@ -11,25 +11,10 @@ import com.parc.cpss.beanval.ViolationSeverity;
 
 import net.andreinc.jbvext.annotations.date.*;
 
-public class Person {
-	
-	@NotNull(message = "birthday must not be null")
-	@After(value = "1900-01-01", format = "yyyy-MM-dd", 
-				message="Birthday must be after {value}", 
-				payload=ViolationSeverity.Info.class)
-	@Past(message = "birthday must be in the past")
-	private Date m_birthday;
-	
-	@NotNull(message = "gender must not be null")
-	private String m_gender;
-	
-	@Positive(message="height must be positive")
-	private int m_height;
+public class Person extends PersonBase  {
 	
 	public Person(Date birthday, String gender, int height) {
-		m_birthday = birthday;
-		m_gender = gender;
-		m_height = height;
+		super(birthday, gender, height);
 	}
 	
 	@NotNull
